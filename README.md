@@ -29,9 +29,9 @@
 
 - 요청 주소(Endpoint): `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos`
 
-모든 API 요청(Request) `headers`에 다음 정보가 꼭 포함되어야 합니다.<br>
-`username`은 다른 사람과 겹치지 않도록 주의하세요!<br>
-본명으로 만들어야 나중에 문제가 발생했을 때 찾기가 쉬워요.(E.g. `ParkYoungWoong`)
+모든 API 요청(Request) `headers`에 아래 정보가 꼭 포함돼야 합니다!<br>
+`username`은 `KDT2_ParkYoungWoong`와 같이 본명으로 만들어야 합니다!<br>
+확인할 수 없는 사용자의 DB 정보는 임의로 삭제할 수 있습니다!<br>
 
 ```json
 {
