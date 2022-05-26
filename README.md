@@ -51,7 +51,7 @@ async function createTodo() {
     headers: {
       'content-type': 'application/json',
       'apikey': 'FcKdtJs202110',
-      'username': 'ParkYoungWoong'
+      'username': 'KDT2_ParkYoungWoong'
     },
     data: {
       "title": "할 일 관리 프로젝트 과제 PR 생성"
