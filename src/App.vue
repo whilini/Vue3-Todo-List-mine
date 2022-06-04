@@ -1,15 +1,18 @@
 <template>
-  <HelloWorld />
+  <Header />
+  <TodayDate />
   <RouterView />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from './components/Header.vue'
+import TodayDate from './components/TodayDate.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    TodayDate
   }
 }
 </script>

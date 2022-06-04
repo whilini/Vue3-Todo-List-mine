@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from './Home'
+import Todo from './Todo'
 import About from './About'
 import TodoListAll from './TodoListAll'
 
@@ -9,7 +9,7 @@ export default createRouter({
   routes: [
     {
       path: '/',
-      component: Home
+      component: Todo
     },
     {
       path: '/listall',
