@@ -9,16 +9,19 @@
 
 <style lang="scss" scoped>
 .logo {
-  font-family: "Oswald", sans-serif;
-  font-size: 20px;
+  font-family: "Syntha-Nova", sans-serif;
+  font-size: 24px;
   color: $black;
   text-decoration: none;
+  line-height: 95%;
+  margin-right: 30px;
   &:hover {
     color: $black
   }
   span {
+    font-family: "Syntha-Nova-Black";
     color: $primary;
-    font-size: 24px;
+    font-size: 32px;
   }
 }
 </style>

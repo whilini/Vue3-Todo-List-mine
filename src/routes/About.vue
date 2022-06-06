@@ -32,6 +32,8 @@ export default {
 <style lang="scss" scoped>
 .about {
   text-align: center;
+  font-family: 'NanumSquareRoundB', sans-serif;
+  font-size: 18px;
   .photo {
     width: 250px;
     height: 250px;
@@ -49,7 +51,7 @@ export default {
   }
   .name {
     font-size: 40px;
-    font-family: "Oswald", sans-serif;
+    font-family: "Syntha-Nova-Black", sans-serif;
     margin-bottom: 20px;
   }
 }

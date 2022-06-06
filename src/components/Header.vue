@@ -1,18 +1,20 @@
 <template>
   <header>
-    <Logo />
-    <div class="nav nav-pills">
-      <div
-        v-for="nav in navigations"
-        :key="nav.name"
-        class="nav-item">
-        <RouterLink
-          :to="nav.href"
-          active-class="active"
-          :class="{ active: isMatch(nav.path)}"
-          class="nav-link">
-          {{ nav.name }}
-        </RouterLink>
+    <div class="container">
+      <Logo />
+      <div class="nav nav-pills">
+        <div
+          v-for="nav in navigations"
+          :key="nav.name"
+          class="nav-item">
+          <RouterLink
+            :to="nav.href"
+            active-class="active"
+            :class="{ active: isMatch(nav.path)}"
+            class="nav-link">
+            {{ nav.name }}
+          </RouterLink>
+        </div>
       </div>
     </div>
     <div
@@ -36,12 +38,8 @@ export default {
     return {
       navigations: [
         {
-          name: 'Create',
+          name: 'ToDo',
           href: '/'
-        },
-        {
-          name: 'List',
-          href: '/listall'
         },
         {
           name: 'About',
@@ -68,22 +66,26 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 header {
+  font-family: "Multicolore", sans-serif;
+  font-size: 14px;
   margin: 0 auto 20px;
-  width: max(70vw, 800px);
+  width: max(60vw, 800px);
   height: 70px;
   padding: 0 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
-  .logo {
-    position: absolute;
-    left: 50px;
+  .container {
+    display: flex;
+    .nav-link {
+      text-align: center;
+      width: 100px;
+    }
   }
   .user {
-    position: absolute;
     right: 0;
     width: 50px;
     height: 50px;
