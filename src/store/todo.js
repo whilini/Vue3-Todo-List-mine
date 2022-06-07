@@ -14,13 +14,24 @@ export default {
 
   state: () =>  {
     return {
-      todoDate: [],
-      todos: []
+      todos: [],
+      order: 0,
+      title: []
     }
   },
   mutations: {
     setTodos(state, payload) {
-      console.log(payload)
+      state.todos = payload
+    },
+    deleteTodo(state, payload) {
+      const idx = state.todos.findIndex(todo => todo.id === payload)
+      state.todos.splice(idx, 1)
+    },
+    changeOrderTodos(state, payload) {
+      state.todos = payload
+    },
+    createTodo(state, payload) {
+      state.todos.push(payload)
     }
   },
   actions: {
@@ -30,20 +41,35 @@ export default {
         method: 'GET',
         headers: headers
       })
-      console.log(res)
       commit('setTodos', res.data)
     },
-    async createTodo(context, {done, order, title}) {
-      await axios({
+    async createTodo({ commit }, { title }) {
+      console.log(title)
+      const res = await axios({
         url: END_POINT,
         method: 'POST',
         headers: headers,
         data: {
-          done: done,
-          order: order,
-          title: title,
+          title: title
         }
       })
+      commit('createTodo', res.data)
+    },
+    async changeOrderTodos(context, todoIds) {
+      await axios({
+        url: END_POINT + '/reorder',
+        method: 'PUT',
+        headers: headers,
+        data: todoIds
+      })
+    },
+    async deleteTodo(context, {id}) {
+      await axios({
+        url: END_POINT + '/' + id,
+        method: 'DELETE',
+        headers: headers
+      })
+      context.commit('deleteTodo', id)
     }
   }
 }
