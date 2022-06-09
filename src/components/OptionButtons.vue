@@ -56,6 +56,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin-top: 70px;
+  box-sizing: border-box;
   .nav {
       .nav-item {
         .nav-link {

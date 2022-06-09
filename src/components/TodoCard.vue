@@ -244,6 +244,7 @@ export default {
     }
     .btn-container {
       margin: auto 10px;
+      display: flex;
       .btn-primary {
       font-family: 'NanumSquareRoundEB', sans-serif;
       width: 70px;

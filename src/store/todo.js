@@ -17,6 +17,7 @@ export default {
       todos: [],
       order: 0,
       title: [],
+      loading: false,
       type: 'all',
     }
   },
@@ -35,62 +36,88 @@ export default {
       const idx = state.todos.findIndex(todo => todo.id === payload)
       state.todos.splice(idx, 1)
     },
-    filterTodos(state, payload) {
-      state.todos = state.todos.filter(todo => {
-        todo.done === payload
-      })
-    },
     updateType(state, payload) {
       state.type = payload;
+    },
+    loading(state, payload) {
+      state.loading = payload
     }
   },
   actions: {
-    async readTodos({ commit }) {
-      const res = await axios({
-        url: END_POINT,
-        method: 'GET',
-        headers: headers
-      })
-      commit('readTodos', res.data)
+    async readTodos({ state, commit }) {
+      if (state.loading) return
+      
+      try {
+        commit('loading', true)
+        
+        const res = await axios({
+          url: END_POINT,
+          method: 'GET',
+          headers: headers
+        })
+        commit('readTodos', res.data)
+      } catch(err) {
+        alert(err)
+      } finally {
+        commit('loading', false)
+      }
     },
     async createTodo({ commit }, { title }) {
-      const res = await axios({
-        url: END_POINT,
-        method: 'POST',
-        headers: headers,
-        data: {
-          title: title
-        }
-      })
-      commit('createTodo', res.data)
+      try {
+        const res = await axios({
+          url: END_POINT,
+          method: 'POST',
+          headers: headers,
+          data: {
+            title: title
+          }
+        })
+        commit('createTodo', res.data)
+      } catch(err) {
+        alert(err)
+      }
     },
     async updateTodo({ commit }, {id, title, done, order = 0}) {
-      const res = await axios({
-        url: END_POINT + '/' + id,
-        method: 'PUT',
-        headers: headers,
-        data: {
-          title: title,
-          done: done,
-          order: order
-        }
-      })
-      commit('updateTodo', res.data)
+      try {
+        const res = await axios({
+          url: END_POINT + '/' + id,
+          method: 'PUT',
+          headers: headers,
+          data: {
+            title: title,
+            done: done,
+            order: order
+          }
+        })
+        commit('updateTodo', res.data)
+      } catch(err) {
+        alert(err)
+      }
     },
-    async deleteTodo(context, {id}) {
-      await axios({
-        url: END_POINT + '/' + id,
-        method: 'DELETE',
-        headers: headers
-      })
-      context.commit('deleteTodo', id)
+    async deleteTodo({ commit }, { id }) {
+      try {
+        await axios({
+          url: END_POINT + '/' + id,
+          method: 'DELETE',
+          headers: headers
+        })
+        commit('deleteTodo', id)
+      } catch(err) {
+        alert(err)
+      }
     },
-    async filterTodos({ commit, dispatch }, { boolean }) {
-      await dispatch('readTodos')
-      commit('readTodos', boolean)
+    deleteAll({ dispatch }, ids) {
+      try {
+        ids.map(todo =>{
+          const id = todo.id
+          dispatch('deleteTodo', { id })
+        })
+      } catch{
+        console.log('failed')
+      }
     },
-    updateType({commit}, type) {
+    updateType({ commit }, type) {
       commit('updateType', type)
-    }
+    },
   }
 }

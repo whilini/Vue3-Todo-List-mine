@@ -1,11 +1,23 @@
 <template>
+  <Loader v-if="loading" />
   <RouterLink
+    v-else
     to="/"
     class="logo">
     CREATE<br />
     <span>TODO</span>
   </RouterLink>
 </template>
+
+<script>
+export default {
+  computed: {
+    loading() {
+      return this.$store.state.todo.loading
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .logo {

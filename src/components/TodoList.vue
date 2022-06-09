@@ -1,7 +1,11 @@
 <template>
   <OptionButtons />
-  <div class="box-container">
-    <div class="list-box container">
+  <div class="box-container container">
+    <Loader
+      v-if="loading" />
+    <div
+      v-else
+      class="list-box container">
       <div
         v-if="storeTodo.length === 0"
         class="default-message">
@@ -11,6 +15,13 @@
         v-else-if="todos.length === 0"
         class="default-message">
         <p>{{ defaultMessage[type] }}</p>
+      </div>
+      <div v-if="type === 'done' && !(todos.length === 0)">
+        <button
+          class="delete-all btn btn-secondary"
+          @click="deleteAll">
+          Delete All
+        </button>
       </div>
       <TodoCard
         v-for="(todo, idx) in todos"
@@ -23,12 +34,14 @@
 
 <script>
 import OptionButtons from '@/components/OptionButtons.vue'
+import Loader from './Loader.vue'
 import TodoCard from "./TodoCard.vue"
 
 export default {
   components: {
     TodoCard,
     OptionButtons,
+    Loader
   },
   data() {
     return {
@@ -40,6 +53,9 @@ export default {
     }
   },
   computed: {
+    loading() {
+      return this.$store.state.todo.loading
+    },
     storeTodo() {
       return this.$store.state.todo.todos
     },
@@ -57,7 +73,7 @@ export default {
     daySlots() {
       const res = this.$store.state.todo.todos
       if(!res) return 
-
+      
       const daySlots = res.map((item) => {
         return item.title.slice(-1)
       });
@@ -71,6 +87,11 @@ export default {
   methods: {
     async readTodos() {
       this.$store.dispatch('todo/readTodos')
+    },
+    deleteAll() {
+      if(!this.type === 'done') return
+      const res = this.storeTodo.filter((todo) => todo.done)
+      this.$store.dispatch('todo/deleteAll', res)
     }
   },
 }
@@ -79,13 +100,13 @@ export default {
 <style lang="scss" scoped>
 .box-container {
   display: flex;
+  min-height: 330px;
+  background-color: $gray-200;
+  border-radius: 10px;
   .list-box {
     display: block;
     height: 100%;
-    min-height: 330px;
-    background-color: $gray-200;
     left: 35%;
-    border-radius: 10px;
     .default-message {
       display: block;
       margin: auto;
@@ -97,5 +118,16 @@ export default {
       }
     }
   }
+}
+.delete-all {
+  display: block;
+  margin-top: 20px;
+  margin-left: auto;
+  right: 20px;
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Multicolore', sans-serif;
+  position: relative;
+  z-index: 2;
 }
 </style>

@@ -31,6 +31,8 @@
 @import "../../node_modules/bootstrap/scss/functions";
 
 $primary: #6bb739;
+$secondary: #adb5bd;
+
 .form-select-sm{
   padding: 4px 5px 4px;
   margin-right: 6px;
@@ -44,8 +46,8 @@ $primary: #6bb739;
 $form-select-font-family: 'NanumSquareRoundB', sans-serif;
 $form-select-font-family-sm: 'NanumSquareRoundB', sans-serif;
 
-$nav-tabs-border-color: #e9ecef;
-$nav-tabs-link-active-border-color: #e9ecef;
+$nav-tabs-border-color: transparent;
+$nav-tabs-link-active-border-color: transparent;
 $nav-tabs-link-active-bg: #e9ecef;
 
 
