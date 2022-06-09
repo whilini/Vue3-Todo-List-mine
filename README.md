@@ -1,246 +1,183 @@
 # 📌 할 일 관리(Todo) 프로젝트
 
-- 과제 기한:
-  - 과제 수행 기간: 05월 19일(목) ~ 06월 09일(목)
-  - 코드 리뷰 기간: 06월 09일(목) ~ 06월 17일(금)
-- 내용:
-  - 주어진 API를 활용해 할 일 관리 프로젝트를 만들어보세요.
-
 ## 요구사항
 
 ### 필수 요구사항
 
-- [ ] 할 일 목록(list)을 조회(Read)할 수 있어야 합니다.
-- [ ] 할 일 항목(item)을 추가(Create)할 수 있어야 합니다.
-- [ ] 할 일 항목을 수정(Update)할 수 있어야 합니다.
-- [ ] 할 일 항목을 삭제(Delete)할 할 수 있어야 합니다.
-- [ ] 실제 서비스로 배포하고 접근 가능한 링크를 추가해야 합니다.
+- [x] 할 일 목록(list)을 조회(Read)할 수 있어야 합니다.
+- [x] 할 일 항목(item)을 추가(Create)할 수 있어야 합니다.
+- [x] 할 일 항목을 수정(Update)할 수 있어야 합니다.
+- [x] 할 일 항목을 삭제(Delete)할 할 수 있어야 합니다.
+- [x] 실제 서비스로 배포하고 접근 가능한 링크를 추가해야 합니다.
 
 ### 선택 요구사항
 
 - [ ] 할 일 항목의 순서를 바꿀 수 있도록 만들어 보세요.
-- [ ] 할 일을 완료하지 않은 항목과 완료한 항목을 분류해서 출력해 보세요.
-- [ ] 할 일을 완료한 항목을 한번에 삭제할 수 있도록 만들어 보세요.
+- [x] 할 일을 완료하지 않은 항목과 완료한 항목을 분류해서 출력해 보세요.
+- [x] 할 일을 완료한 항목을 한번에 삭제할 수 있도록 만들어 보세요.
 - [ ] 할 일 항목의 최신 수정일을 표시해 보세요.
-- [ ] 최초 API 요청(Request)에 대한 로딩 애니메이션을 추가해 보세요.
-- [ ] SCSS, Bootstrap 등을 구성해 프로젝트를 최대한 예쁘게(?) 만들어 보세요.
+- [x] 최초 API 요청(Request)에 대한 로딩 애니메이션을 추가해 보세요.
+- [x] SCSS, Bootstrap 등을 구성해 프로젝트를 최대한 예쁘게(?) 만들어 보세요.
 
-## API 사용법
 
-- 요청 주소(Endpoint): `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos`
+# 💡CUSTOM
 
-모든 API 요청(Request) `headers`에 아래 정보가 꼭 포함돼야 합니다!<br>
-`username`은 `KDT2_ParkYoungWoong`와 같이 본명으로 만들어야 합니다!<br>
-확인할 수 없는 사용자의 DB 정보는 임의로 삭제할 수 있습니다!<br>
 
-```json
-{
-  "content-type": "application/json",
-  "apikey": "FcKdtJs202204",
-  "username": "<YOUR_NAME>"
-}
-```
+**💡하루 중에서도 시간대를 나누어  선택할 수 있도록 하고 할일의 마지막에 시간대(아침, 점심, 저녁, 밤)를 표시**
 
-API 사용 예시:
+```jsx
+async createTodo() {
+  const nan = this.month + this.day + this.slot
+  // 할일 또는 날짜를 하나라도 지정하지 않았을 때에는 동작하지 않도록 함
+  if(!this.title.trim() || isNaN(nan) === true) return
 
-```js
-async function createTodo() {
-  const { data } = await axios({
-    url: 'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'apikey': 'FcKdtJs202204',
-      'username': 'KDT2_ParkYoungWoong'
-    },
-    data: {
-      "title": "할 일 관리 프로젝트 과제 PR 생성"
-    }
+  this.month = this.month.toString().length < 2? '0' + this.month : this.month
+  this.day = this.day.toString().length < 2? '0' + this.day : this.day
+
+	const todoDate = (this.year + this.month + this.day)
+
+  this.$store.dispatch('todo/createTodo', {
+    title: this.title + ':' + this.slot,
+    order: todoDate
   })
-  console.log(data)
+	// select option 초기화
+  this.title = ''
+  this.year = new Date().getFullYear()
+  this.month = 'month'
+  this.day = 'day'
+  this.slot = 'slot'
 }
 ```
+<br />
 
-### 목록 조회
+**💡title에 추가한 `‘:+this.slot’`을 제외한 할일 부분만 출력**
 
-전체 할 일 목록을 조회합니다.
-
-```curl
-curl -X 'GET' \ 
-https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos
+```jsx
+newTitle() {
+  return this.todo.title.split(':')[0]
+}
 ```
+<br>
 
-```plaintext
-@return {Object[]} - 조회된 나의 할 일 목록
-```
+**💡일정이 없을 때의 기본 메세지와 일정이 있을 때의 기본 메세지를 다르게 출력**
 
-요청 데이터 예시:
+```jsx
+<template>
+	<div
+		// API에 등록된 todo가 없을 때
+	  v-if="storeTodo.length === 0"
+	  class="default-message">
+	  <p>{{ defaultMessage['all'] }}</p>
+	</div>
+	<div
+		// API에 등록된 todo는 있지만 done 또는 notyet에서 빈칸일 때
+	  v-else-if="todos.length === 0"
+	  class="default-message">
+	  <p>{{ defaultMessage[type] }}</p>
+	</div>
+</template>
 
-```js
-undefined
-```
-
-응답 데이터 예시:
-
-```json
-[
-  {
-    "id": "mnIwaAPIAE1ayQmqekiR",
-    "order": 0,
-    "title": "JS 공부하기",
-    "done": false,
-    "createdAt": "2021-10-28T05:18:51.868Z",
-    "updatedAt": "2021-10-28T05:18:51.868Z"
-  },
-  {
-    "id": "tMzPImGoWtRdJ6yyVv2y",
-    "order": 1,
-    "title": "과제 PullRequest(PR) 생성",
-    "done": true,
-    "createdAt": "2021-10-28T04:16:53.980Z",
-    "updatedAt": "2021-10-28T09:40:17.955Z"
-  },
-  {
-    "id": "Rq8BebKihCgteHHhMIRS",
-    "order": 2,
-    "title": "API 스터디",
-    "done": false,
-    "createdAt": "2021-10-28T04:17:02.510Z",
-    "updatedAt": "2021-10-28T04:17:02.510Z"
+<script>
+export default {
+	data() {
+    return {
+      defaultMessage: {
+        'all': "Let us create TODO! 📝",
+        'done': "There is nothing Done 😓",
+        'notyet': "You did all Done! 👍"
+      }
+    }
   }
-]
+}
+</script>
 ```
 
-### 목록 순서 변경
+<br>
 
-할 일 목록의 순서를 변경합니다.
+**💡’모두 삭제’ 버튼을 ‘done’ 목록을 볼 때만 뜨도록 함**
 
-```curl
-curl -X 'PUT' \ 
-https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/reorder
+```jsx
+<div v-if="type === 'done' && !(todos.length === 0)">
+  <button
+    class="delete-all btn btn-secondary"
+    @click="deleteAll">
+    Delete All
+  </button>
+</div>
 ```
+<br>
 
-```plaintext
-@param {String[]} todoIds - 변경할 순서의 할 일 항목의 ID 배열 (필수)
-@return {Boolean} - 순서 변경 여부
-```
+**💡’done’과 ‘not yet’을 computed로 필터링함**
 
-요청 데이터 예시:
-
-```json
-{
-  "todoIds": [
-    "mnIwaAPIAE1ayQmqekiR",
-    "tMzPImGoWtRdJ6yyVv2y",
-    "GHrvr3LaPx1g7y2sNuaC",
-    "Rq8BebKihCgteHHhMIRS"
-  ]
+```jsx
+todos() {
+  const todoList = this.storeTodo
+  const todoType = this.type;
+  let result
+      
+  switch(todoType) {
+    case 'all':
+      result = todoList
+      break
+    case 'done':
+      result = todoList.filter((todo) => todo.done)
+      break
+    case 'notyet':
+      result = todoList.filter((todo) => !todo.done)
+      break
+  }
+  return result
 }
 ```
 
-응답 데이터 예시:
+# ⚠️Issue
 
-```json
-true
-```
+**⚠️`new Date().getMonth()`로 오늘 날짜를 가져오려 했으나 5월이라고 출력**
 
-### 항목 추가
+❗문서를 찾아보니 January는 0으로 표기됨. 월은 0부터 시작한다고 함.
 
-할 일 항목을 새롭게 추가합니다.
-
-```curl
-curl -X 'POST' \ 
-https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos
-```
-
-```plaintext
-@param {String} title - 할 일의 제목 (필수)
-@param {Number} order - 할 일의 순서
-@return {Object} - 생성된 할 일 항목 객체 
-```
-
-요청 데이터 예시:
-
-```json
-{
-  "title": "KDT 과정 설계 미팅",
-  "order": 2
+```jsx
+const thisYear = new Date().getFullYear()
+const thisMonth = new Date().getMonth()
+const thisDay = new Date().getDate()
+return {
+  year: thisYear,
+  month: thisMonth + 1,
+  day: thisDay
 }
 ```
 
-응답 데이터 예시:
+**⚠️월마다 일수가 다르므로 모두 다르게 등록해야함(윤달까지 계산하기에는 시간이 부족ㅠㅠ)**
 
-```json
-{
-  "id": "7P8dOM4voAv8a8cfoeKZ",
-  "order": 0,
-  "title": "KDT 과정 설계 미팅",
-  "done": false,
-  "createdAt": "2021-10-29T07:20:02.749Z",
-  "updatedAt": "2021-10-29T07:20:02.749Z"
-}
+```jsx
+days: (() => {
+	// 월마다 마지막 일을 등록
+  const months = {'1': 31, '2': 28, '3': 31, '4': 30, '5': 31, '6': 30, '7': 31, '8': 31, '9': 30, '10': 31, '11': 30, '12': 31}
+
+	// 일(day)을 넣어줄 빈 리스트를 만들고
+  const result = []
+	// months의 key값을 순차적으로 순회를 하며
+  Object.keys(months).forEach((key) => {
+	// day라는 지역변수에 months의 value값인 31, 28, 31, 30...을 할당
+    const day = months[key]
+	// 2월이면 length가 28이고 0부터 28개(27까지)의 숫자를 만들고 그 요소에 각 1씩 더해준 값을 result에 push
+    result.push(Array.from({length: day}, (_, i) => i+1))
+  })
+
+  return result 
+})(),
+```
+<br>
+
+**⚠️할일 완료 버튼과 할일 수정 버튼의 methods가 같으나 수정 버튼을 눌렀을 때만 edit모드가 켜졌으면 함**
+
+```jsx
+async changeTodo(button) {
+	// 할일 완료 버튼일 때는 edit모드 전환이 일어나지 않음
+  if (button === 'checkbox') return
+  this.editButton()
+},
 ```
 
-### 항목 수정
-
-특정 할 일 항목을 수정합니다.
-
-```curl
-curl -X 'PUT' \ 
-https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/:todoId
-```
-
-```plaintext
-@param {String} title - 할 일의 제목 (필수)
-@param {Boolean} done - 할 일의 완료 여부 (필수)
-@param {Number} order - 할 일의 순서 (필수)
-@return {Object} - 수정된 할 일 항목 객체  
-```
-
-요청 데이터 예시:
-
-```json
-{
-  "title": "Bootstrap 스타일 추가",
-  "done": false,
-  "order": 2
-}
-```
-
-응답 데이터 예시:
-
-```json
-{
-  "id": "7P8dOM4voAv8a8cfoeKZ",
-  "title": "Bootstrap 스타일 추가",
-  "done": false,
-  "order": 2,
-  "createdAt": "2021-10-29T07:20:02.749Z",
-  "updatedAt": "2021-10-29T07:20:02.749Z"
-}
-```
-
-### 항목 삭제
-
-특정 할 일 항목을 삭제합니다.
-
-```curl
-curl -X 'DELETE' \ 
-https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/:todoId
-```
-
-```plaintext
-@return {Boolean} - 할 일 항목의 삭제 여부  
-```
-
-요청 데이터 예시:
-
-```js
-undefined
-```
-
-응답 데이터 예시:
-
-```json
-true
-```
+## 후기
+항상 시간에 쫓기듯 과제하긴 했지만 이번은 더 심각했다.. 강의 듣는 것에 너무 욕심 부린 나머지 일주일도 안되는 시간동안 만들어서 선택 항목을 다 구현하지는 못한 것이 아쉽다. 그래도 이로써 API 다루는 방법을 좀 더 알게된 것 같아 뿌듯하다!

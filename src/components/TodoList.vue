@@ -65,9 +65,19 @@ export default {
     todos() {
       const todoList = this.storeTodo
       const todoType = this.type;
-      if (todoType === 'all') return todoList
-
-      const result = todoType === 'done' ? todoList.filter((todo) => todo.done ) : todoList.filter((todo) => !todo.done)
+      let result
+      
+      switch(todoType) {
+        case 'all':
+          result = todoList
+          break;
+        case 'done':
+          result = todoList.filter((todo) => todo.done)
+          break
+        case 'notyet':
+          result = todoList.filter((todo) => !todo.done)
+          break
+      }
       return result
     },
     daySlots() {
