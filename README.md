@@ -1,5 +1,8 @@
 # 📌 할 일 관리(Todo) 프로젝트
 
+### 배포 사이트
+[Todo list with Vue3](https://animated-llama-a2d661.netlify.app/)
+
 ## 요구사항
 
 ### 필수 요구사항
