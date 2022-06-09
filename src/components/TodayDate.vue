@@ -1,7 +1,9 @@
 <template>
-  <p>
-    {{ date.year }}년 {{ date.month }}월 {{ date.day }}일
-  </p>
+  <div class="container">
+    <p>
+      {{ date.year }}년 {{ date.month }}월 {{ date.day }}일
+    </p>
+  </div>
 </template>
 
 <script>
@@ -26,8 +28,11 @@ export default {
 
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
-p {
-  font-family: 'Do Hyeon', sans-serif;
-  font-size: 28px;
+.container {
+  margin: 30px auto 30px;
+  p {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 28px;
+  }
 }
 </style>

@@ -7,8 +7,9 @@ export default createRouter({
   scrollBehavior: () => ({ top: 0 }),
   routes: [
     {
+      name: 'todo',
       path: '/',
-      component: Todo
+      component: Todo,
     },
     {
       path: '/about',

@@ -16,22 +16,35 @@ export default {
     return {
       todos: [],
       order: 0,
-      title: []
+      title: [],
+      type: 'all',
     }
   },
   mutations: {
-    setTodos(state, payload) {
+    readTodos(state, payload) {
+      state.todos = payload
+    },
+    createTodo(state, payload) {
+      state.todos.push(payload)
+    },
+    updateTodo(state, payload) {
+      const idx = state.todos.findIndex(todo => todo.id === payload.id)
+      state.todos.splice(idx, 1, payload)
+    },
+    changeOrderTodos(state, payload) {
       state.todos = payload
     },
     deleteTodo(state, payload) {
       const idx = state.todos.findIndex(todo => todo.id === payload)
       state.todos.splice(idx, 1)
     },
-    changeOrderTodos(state, payload) {
-      state.todos = payload
+    filterTodos(state, payload) {
+      state.todos = state.todos.filter(todo => {
+        todo.done === payload
+      })
     },
-    createTodo(state, payload) {
-      state.todos.push(payload)
+    updateType(state, payload) {
+      state.type = payload;
     }
   },
   actions: {
@@ -41,10 +54,9 @@ export default {
         method: 'GET',
         headers: headers
       })
-      commit('setTodos', res.data)
+      commit('readTodos', res.data)
     },
     async createTodo({ commit }, { title }) {
-      console.log(title)
       const res = await axios({
         url: END_POINT,
         method: 'POST',
@@ -54,6 +66,19 @@ export default {
         }
       })
       commit('createTodo', res.data)
+    },
+    async updateTodo({ commit }, {id, title, done, order = 0}) {
+      const res = await axios({
+        url: END_POINT + '/' + id,
+        method: 'PUT',
+        headers: headers,
+        data: {
+          title: title,
+          done: done,
+          order: order
+        }
+      })
+      commit('updateTodo', res.data)
     },
     async changeOrderTodos(context, todoIds) {
       await axios({
@@ -70,6 +95,13 @@ export default {
         headers: headers
       })
       context.commit('deleteTodo', id)
+    },
+    async filterTodos({ commit, dispatch }, { boolean }) {
+      await dispatch('readTodos')
+      commit('readTodos', boolean)
+    },
+    updateType({commit}, type) {
+      commit('updateType', type)
     }
   }
 }

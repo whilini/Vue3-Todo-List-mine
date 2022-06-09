@@ -26,10 +26,27 @@
   font-family: 'Multicolore';
   src: url('../../fonts/Multicolore-Pro.woff') format('woff');
 }
-$primary: #6bb739;
-
-
 @import "../../node_modules/bootstrap/scss/functions";
+
+$primary: #6bb739;
+.form-select-sm{
+  padding: 4px 5px 4px;
+  margin-right: 6px;
+  border-color: #ced4da;
+  color: #212529;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+$form-select-font-family: 'NanumSquareRoundB', sans-serif;
+$form-select-font-family-sm: 'NanumSquareRoundB', sans-serif;
+
+$nav-tabs-border-color: #e9ecef;
+$nav-tabs-link-active-border-color: #e9ecef;
+$nav-tabs-link-active-bg: #e9ecef;
+
+
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
 

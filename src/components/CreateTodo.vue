@@ -10,13 +10,6 @@
         v-model="$data[date.name]"
         class="form-select">
         <option
-          :value="date.name"
-          disabled
-          selected
-          hidden>
-          {{ date.name }}
-        </option>
-        <option
           v-for="item in date.items"
           :key="item">
           {{ item }}
@@ -25,12 +18,6 @@
       <select
         v-model="day"
         class="form-select">
-        <option
-          disabled
-          selected
-          hidden>
-          day
-        </option>
         <option
           v-for="chooseDay in days[Number(month)-1]"
           :key="chooseDay">
@@ -55,7 +42,7 @@
       </select>
     </div>
   </div>
-  <div class="container">
+  <div class="input-container">
     <input
       class="form-control"
       :value="title"
@@ -75,10 +62,10 @@ export default {
     return {
       title: '',
       year: new Date().getFullYear(),
-      month: 'month',
-      day: 'day',
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
       slot: 'slot',
-      slots: {'새벽': 1, '아침': 2, '오후': 3, '저녁': 4},
+      slots: {'아침': '1', '오후': '2', '저녁': '3', '밤': '4'},
       days: (() => {
         const months = {'1': 31, '2': 28, '3': 31, '4': 30, '5': 31, '6': 30, '7': 31, '8': 31, '9': 30, '10': 31, '11': 30, '12': 31}
 
@@ -116,26 +103,20 @@ export default {
     }
   },
   methods: {
-    fillZero() {
-      this.month = this.month.toString().length < 2? '0' + this.month : this.month
-      this.day = this.day.toString().length < 2? '0' + this.day : this.day
-      this.slot = this.slot + '00'
-    },
     async createTodo() {
-      const todoDate = Number(this.year + this.month + this.day + this.slot)
+      const nan = this.month + this.day + this.slot
       
-      if(!this.title.trim() || isNaN(todoDate) === true) return
-
-      this.fillZero()
+      if(!this.title.trim() || isNaN(nan) === true) return
+      
+      const todoDate = (this.year + '년 ' + this.month + '월 ' + this.day + '일')
       this.$store.dispatch('todo/createTodo', {
-        title: this.title,
-        order: todoDate
+        title: todoDate + ':' + this.title + ':' + this.slot,
       })
 
       this.title = ''
       this.year = new Date().getFullYear()
-      this.month = 'month'
-      this.day = 'day'
+      this.month = new Date().getMonth() + 1
+      this.day = new Date().getDate()
       this.slot = 'slot'
     },
   }
@@ -155,6 +136,7 @@ export default {
     margin-right:15pxs;
   }
   > * {
+    flex-shrink: 0;
     height: 38px;
     margin-right: 10px;
     font-size: 15px;
@@ -175,10 +157,11 @@ export default {
     }
   }
 }
-.container {
+.input-container {
   display: flex;
-  margin-bottom: 10px;
-  width: 625px;
+  margin: 20px auto 20px;
+  width: 600px;
+  flex-shrink: 0;
   input {
     margin-right: 10px;
     text-align: right;
