@@ -1,7 +1,7 @@
 <template>
   <OptionButtons />
   <div class="box-container">
-    <div class="list-box container justify-content-start">
+    <div class="list-box container">
       <div
         v-if="storeTodo.length === 0"
         class="default-message">
@@ -52,7 +52,6 @@ export default {
       if (todoType === 'all') return todoList
 
       const result = todoType === 'done' ? todoList.filter((todo) => todo.done ) : todoList.filter((todo) => !todo.done)
-      console.log(todoList)
       return result
     },
     daySlots() {
@@ -81,15 +80,16 @@ export default {
 .box-container {
   display: flex;
   .list-box {
-    display: flex;
-    flex-wrap: wrap;
+    display: block;
     height: 100%;
     min-height: 330px;
     background-color: $gray-200;
     left: 35%;
     border-radius: 10px;
     .default-message {
+      display: block;
       margin: auto;
+      padding-top: 130px;
       p {
         font-family: 'Multicolore', sans-serif;
         font-size: 30px;

@@ -25,7 +25,7 @@ export default {
       state.todos = payload
     },
     createTodo(state, payload) {
-      state.todos.push(payload)
+      state.todos.unshift(payload)
     },
     updateTodo(state, payload) {
       const idx = state.todos.findIndex(todo => todo.id === payload.id)

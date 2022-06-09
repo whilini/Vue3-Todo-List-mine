@@ -1,18 +1,17 @@
 <template>
-  <div class="card">
+  <div class="todo-card">
     <div
       v-if="show"
-      class="card-body off-edit">
-      <div class="card-title">
-        <h5>{{ newDate }}</h5>
-        <h4> {{ newTitle }}</h4>
+      class="todo off-edit">
+      <div class="off-title">
+        <p>{{ newDate }}</p>
         <img
           :src="require(`@/assets/${daySlot}.png`)"
           alt="" />
       </div>
+      <p>{{ newTitle }}</p>
       <div
         class="form-check form-switch d-flex justify-content-center"
-        
         :value="todo.done"
         @click="changeTodo('checkbox')">
         <input
@@ -25,26 +24,28 @@
           role="switch"
           :checked="todo.done" />
       </div>
-      <button
-        class="btn btn-primary"
-        @click="editButton">
-        수정
-      </button>
-      <button
-        class="btn btn-primary"
-        @click="deleteTodo(todo.id)">
-        삭제
-      </button>
+      <div class="btn-container">
+        <button
+          class="btn btn-primary"
+          @click="editButton">
+          수정
+        </button>
+        <button
+          class="btn btn-primary"
+          @click="deleteTodo(todo.id)">
+          삭제
+        </button>
+      </div>
     </div>
     <div
       v-else
-      class="on-edit card-body">
+      class="on-edit todo">
       <div class="selcts d-flex">
         <select
           v-for="date in chooseDate"
           :key="date.name"
           v-model="$data[date.name]"
-          class="form-select-sm">
+          class="form-select">
           <option
             v-for="item in date.items"
             :key="item">
@@ -53,7 +54,7 @@
         </select>
         <select
           v-model="day"
-          class="form-select-sm">
+          class="form-select">
           <option
             v-for="chooseDay in days[Number(month)-1]"
             :key="chooseDay">
@@ -62,7 +63,7 @@
         </select>
         <select
           v-model="slot"
-          class="form-select-sm">
+          class="form-select">
           <option
             disabled
             selected
@@ -76,18 +77,16 @@
           </option>
         </select>
       </div>
-      <div class="input-container d-block">
-        <input
-          class="form-control"
-          :value="title"
-          @input="title = $event.target.value"
-          @keypress.enter="changeTodo('submit')" />
-        <button
-          class="btn btn-primary"
-          @click="changeTodo('submit')">
-          수정 완료
-        </button>
-      </div>
+      <input
+        class="form-control"
+        :value="title"
+        @input="title = $event.target.value"
+        @keypress.enter="changeTodo('submit')" />
+      <button
+        class="btn btn-primary"
+        @click="changeTodo('submit')">
+        수정 완료
+      </button>
     </div>
   </div>
 </template>
@@ -203,43 +202,84 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card {
+.todo-card {
   flex-shrink: 0;
-  width: 300px;
-  height: 315px;
-  margin: 20px auto 10px;
+  width: 100%;
+  height: 60px;
+  margin: 20px auto 20px;
+  border-radius: 10px;
+  background-color: $white;
   .off-edit {
-    display: block;
-    .card-title {
-      margin-bottom: 10px;
+    display: flex;
+    margin: auto;
+    height: 100%;
+    .off-title {
+      display: flex;
+      align-items: center;
+      p {
+        font-family: 'NanumBarunpenB', sans-serif;
+        font-size: 24px;
+        margin-left: 20px;
+        margin-right: 10px;
+        width: 160px;
+      }
       img {
-        width: 40px;
+        width: 30px;
+        height: auto;
       }
     }
+    p {
+      font-family: 'NanumBarunpenB', sans-serif;
+      font-size: 24px;
+      margin: auto;
+      padding: 0;
+    }
     .form-check {
-      margin: 15px auto 15px;
+      margin: 15px 0 15px;
+      width: 50px;
       input {
         transform: scale(1.3);
         margin-right: 10px;
       }
     }
-  }
-  .on-edit {
-    display: block;
-    justify-content: center;
-    flex-shrink: 0;
-    .selcts-container {
-      display: flex;
-      .selects {
-        display: flex;
+    .btn-container {
+      margin: auto 10px;
+      .btn-primary {
+      font-family: 'NanumSquareRoundEB', sans-serif;
+      width: 70px;
+      height: 36px;
+      color: $white;
+      margin-right: 10px;
       }
     }
   }
-  .btn-primary {
-    font-family: 'NanumSquareRoundEB', sans-serif;
-    width: 70px;
-    color: $white;
-    margin-right: 10px;
+  .on-edit {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 100%;
+    .selcts {
+      display: flex;
+      margin-left: 5px;
+      select {
+        width: 90px;
+        margin-left: 10px;
+      }
+    }
+    input {
+      margin: auto 10px;
+      width: 100%;
+    }
+    .btn-primary {
+      right: 15px;
+      font-family: 'NanumSquareRoundEB', sans-serif;
+      width: 90px;
+      height: 36px;
+      color: $white;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
   }
+  
 }
 </style>

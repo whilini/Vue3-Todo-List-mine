@@ -59,7 +59,8 @@ export default {
   .nav {
       .nav-item {
         .nav-link {
-          width: 100px;
+          width: 126px;
+          font-family: 'Multicolore', sans-serif;
       }
     }
   }
