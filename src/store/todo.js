@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const apikey = process.env.VUE_APP_APIKEY
+const VUE_APP_APIKEY = process.env.VUE_APP_APIKEY
 
 const END_POINT = 'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos'
 const headers = {
   'Content-Type': 'application/json',
-  apikey: apikey,
+  apikey: VUE_APP_APIKEY,
   username: 'KDT2_KimHwiLin'
 }
 
