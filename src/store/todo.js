@@ -31,9 +31,6 @@ export default {
       const idx = state.todos.findIndex(todo => todo.id === payload.id)
       state.todos.splice(idx, 1, payload)
     },
-    changeOrderTodos(state, payload) {
-      state.todos = payload
-    },
     deleteTodo(state, payload) {
       const idx = state.todos.findIndex(todo => todo.id === payload)
       state.todos.splice(idx, 1)
@@ -79,14 +76,6 @@ export default {
         }
       })
       commit('updateTodo', res.data)
-    },
-    async changeOrderTodos(context, todoIds) {
-      await axios({
-        url: END_POINT + '/reorder',
-        method: 'PUT',
-        headers: headers,
-        data: todoIds
-      })
     },
     async deleteTodo(context, {id}) {
       await axios({

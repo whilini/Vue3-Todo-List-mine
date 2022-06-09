@@ -1,7 +1,17 @@
 <template>
   <OptionButtons />
   <div class="box-container">
-    <div class="list-box container">
+    <div class="list-box container justify-content-start">
+      <div
+        v-if="storeTodo.length === 0"
+        class="default-message">
+        <p>{{ defaultMessage['all'] }}</p>
+      </div>
+      <div
+        v-else-if="todos.length === 0"
+        class="default-message">
+        <p>{{ defaultMessage[type] }}</p>
+      </div>
       <TodoCard
         v-for="(todo, idx) in todos"
         :key="todo.id"
@@ -20,16 +30,29 @@ export default {
     TodoCard,
     OptionButtons,
   },
+  data() {
+    return {
+      defaultMessage: {
+        'all': "Let us create TODO! 📝",
+        'done': "There is nothing Done 😓",
+        'notyet': "You did all Done! 👍"
+      }
+    }
+  },
   computed: {
+    storeTodo() {
+      return this.$store.state.todo.todos
+    },
     type() {
       return this.$store.state.todo.type
     },
     todos() {
-      const todoList = this.$store.state.todo.todos
+      const todoList = this.storeTodo
       const todoType = this.type;
       if (todoType === 'all') return todoList
 
       const result = todoType === 'done' ? todoList.filter((todo) => todo.done ) : todoList.filter((todo) => !todo.done)
+      console.log(todoList)
       return result
     },
     daySlots() {
@@ -59,12 +82,20 @@ export default {
   display: flex;
   .list-box {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     height: 100%;
+    min-height: 330px;
     background-color: $gray-200;
     left: 35%;
     border-radius: 10px;
+    .default-message {
+      margin: auto;
+      p {
+        font-family: 'Multicolore', sans-serif;
+        font-size: 30px;
+        color: $gray-500;
+      }
+    }
   }
 }
 </style>
