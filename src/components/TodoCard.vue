@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-card">
+  <div :class="`todo-card ${done ? 'done' : ''}`">
     <div
       v-if="show"
       class="todo off-edit">
@@ -209,6 +209,8 @@ export default {
   margin: 20px auto 20px;
   border-radius: 10px;
   background-color: $white;
+  transition: all .3s;
+  
   .off-edit {
     display: flex;
     margin: auto;
@@ -283,4 +285,16 @@ export default {
   }
   
 }
+.done {
+  background-color: $gray-300;
+  transition: all .2s;
+  color: rgb(166, 173, 180);
+  img {
+    opacity: .3;
+  }
+  .btn {
+    opacity: .6;
+  }
+}
+
 </style>
