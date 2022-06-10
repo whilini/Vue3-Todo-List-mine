@@ -178,6 +178,19 @@ async changeTodo(button) {
   this.editButton()
 },
 ```
+<br>
+
+**⚠️order의 값이 같은 상태에서는 리스트의 순서가 등록된 순으로 정렬되지 않고 무작위로 변함**
+
+❗createdAt이 `new Date()`로 계산 될 수 있는 값이어서 create된 날짜를 기준으로 sort 함수를 씀
+
+```jsx
+readTodos(state, payload) {
+  const sorted = payload.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  console.log(sorted)
+  state.todos = sorted
+}
+```
 
 ## 후기
 항상 시간에 쫓기듯 과제하긴 했지만 이번은 더 심각했다.. 강의 듣는 것에 너무 욕심 부린 나머지 일주일도 안되는 시간동안 만들어서 선택 항목을 다 구현하지는 못한 것이 아쉽다. 그래도 이로써 API 다루는 방법을 좀 더 알게된 것 같아 뿌듯하다!

@@ -23,7 +23,9 @@ export default {
   },
   mutations: {
     readTodos(state, payload) {
-      state.todos = payload
+      const sorted = payload.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      console.log(sorted)
+      state.todos = sorted
     },
     createTodo(state, payload) {
       state.todos.unshift(payload)
